@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "git_clons"
+version = "0.1.0"
+description = "Клонирование всех репозиториев на Githab"
+authors = ["Denis Kustov <denis-kustov@rambler.ru>"]
+license = "BSD"
+readme = "README.md"
+homepage = "https://github.com/denisxab/"
+repository = "https://github.com/denisxab/"
+documentation = "https://.readthedocs.io/ru/latest/"
+keywords = ["GitHab"]
+exclude = [
+    "git_clons/.idea",
+    "git_clons/venv",
+    "git_clons/.git",
+    "git_clons/.gitignore",
+    "git_clons/docs",
+    "git_clons/Makefile"
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+click = "^8.0.4"
+httpx = "^0.22.0"
+mg-file = "^0.1.13"
+loguru = "^0.6.0"
+tqdm = "^4.62.3"
+
+[tool.poetry.dev-dependencies]
+m2r2 = "^0.3.2"
+sphinx-autobuild = "^2021.3.14"
+sphinx-rtd-theme = "^1.0.0"
+Sphinx = "^4.4.0"
+Nuitka = "^0.7"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

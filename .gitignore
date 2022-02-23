@@ -1,0 +1,10 @@
+/venv
+/venvs
+/.idea
+dist
+/__pycache__
+git_clons/__pycache__/
+git_clons/log/
+git_clons/main.build/
+
+# poetry publish --username denisxab --password 'ПАРОЛЬ'
