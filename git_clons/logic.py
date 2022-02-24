@@ -1,5 +1,6 @@
 from os import path, makedirs, listdir
 from time import time
+from typing import Optional
 
 from mg_file.file.json_file import JsonFile
 from mg_file.file.zip_file import ZippFile
@@ -14,46 +15,77 @@ PATH_ERROR_LOG = "./log/error.log"
 logger.info = loglevel(
     "[INFO]",
     PATH_INFO_LOG,
-    console_out=False,
+    console_out=True,
     max_size_file="1mb"
 )
 logger.error = loglevel(
     "[ERROR]",
     PATH_ERROR_LOG,
-    console_out=False,
+    console_out=True,
     max_size_file="1mb",
 )
 
 
-def get_rep(user_name: str, outfile: str, token: str):
+def getrep_(user_name: str, outfile: str, token: str):
     """
-    Получить данные с сервера ``GitHub``
+    Получить данные с сервера ``GitHub``, по умолчанию данные сохранятся
+    в файл ``./look.json``
 
-    python main.py getrep denisxab
+    :param user_name: Имя пользователя GitHub
+    :param outfile: Куда поместить файл с результатом
+    :param token: Токен пользователя GitHub *пока не используется в логики программы*
 
-    :param user_name:
-    :param outfile:
-    :param token:
+
+    :Пример запуска:
+
+    .. code-block:: text
+
+        python main.py getrep denisxab -o /home/denis/prog/GIT/look.json
+
+
+    .. note::
+
+        Можно вручную добавлять репозитории в конфигурацию ``look.json``.
+        Вот структура для храня ``look.json`` :meth:`pars_git.Tall_repos`
+
+        :Пример ручного добавления репозитория:
+
+        .. code-block:: json
+
+            "all_repos": {
+                ...,
+                  "ИмяПроекта": {
+                    "visibility": "private",
+                    "clone_url": "https://USERNAME:TOKEN@github.com/denisxab/ИмяПроекта.git",
+                    "default_branch": "master"
+                }
+                ...,
+            }
+
     """
-
-    #:
+    #: Получить данные из существующей конфигурации
     data_in_file = JsonFile(outfile).readFile()
     res = ParseGit(user_name=user_name, token=token)
     if data_in_file:
         res['all_repos'].update(data_in_file['all_repos'])
     # Записать данные в файл
     JsonFile(outfile).writeFile(res, sort_keys=False)
+    print("END")
 
 
 def clones_(path_look: str, outdir: str):
     """
     Клонировать репозитории
 
-
-    :param outdir: Куда клонировать репозитории
     :param path_look: Путь к файлу с настройками
-    """
+    :param outdir: Куда клонировать репозитории
 
+    :Пример запуска:
+
+    .. code-block:: text
+
+        python main.py clones -o /home/denis/prog/GIT/
+    """
     command_list: list[str] = []
     res: dict = JsonFile(path_look).readFile()
     for _name_rep, _val_rep in res["all_repos"].items():
@@ -66,9 +98,14 @@ def cmd_(command: str, indir: str, ):
     """
     Выполнить команду в каждом репозитории
 
+    :param command: Команда
+    :param indir: Путь к папке с репозиториями
 
-    :param command:
-    :param indir:
+    :Пример запуска Обновить все репозитории:
+
+    .. code-block:: text
+
+        python main.py cmd pull -i /home/denis/prog/GIT/
     """
 
     command_list: list[str] = []
@@ -79,14 +116,21 @@ def cmd_(command: str, indir: str, ):
     os_exe_thread(command, command_list, call_log_info=logger.info, call_log_error=logger.error)
 
 
-def zip_(outpathzip: str, indir: str):
+def zip_(outpathzip: Optional[str], indir: str):
     """
     Архивировать репозитории
 
-    :param outpathzip:
-    :param indir:
-    """
+    :param outpathzip: Куда сохранить архив. По умолчанию там же где
+        ``indir`` в папке `zip/git_zip{время}.zip`
+    :param indir: Путь к папке с репозиториями
 
+
+    :Пример запуска:
+
+    .. code-block:: text
+
+        python main.py zip -i /home/denis/prog/GIT/
+    """
     if outpathzip is None:
         makedirs(f"{indir}/zip", exist_ok=True)
         outpathzip = f"{indir}/zip/git_zip{int(time())}.zip"
@@ -96,3 +140,10 @@ def zip_(outpathzip: str, indir: str):
         # Исключим папку в которой находятся архивы
         execute_path={"zip"}
     )
+
+
+def getlog_():
+    """
+    Получить пути к лог файлам
+    """
+    print(f"info: {path.abspath(PATH_INFO_LOG)}\nerror: {path.abspath(PATH_ERROR_LOG)}\n")

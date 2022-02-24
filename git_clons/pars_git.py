@@ -3,7 +3,7 @@ from enum import Enum
 from pprint import pformat
 from string import Template
 from time import process_time
-from typing import Union, Final, Any, TypedDict, Optional
+from typing import Union, Final, TypedDict, Optional
 
 from httpx import get, AsyncClient, Response
 from mg_file.logsmal.logsmal import logger
@@ -26,21 +26,37 @@ class ApiGutHub(Enum):
     info_user: Template = Template("https://api.github.com/users/$user_name")
 
 
+class Tall_repos(TypedDict):
+    """
+    Структура словаря для хранения проекта
+    """
+    #: Доступность проекта  public/private
+    visibility: str
+    #: Url для клонирования проекта
+    clone_url: str
+    #: Дата обновления проекта
+    updated_at: str
+    #: Основная ветка проект
+    default_branch: str
+
+
 class TGitUser(TypedDict):
     """
-    Профиль пользователя
+    Структура словаря для хранения профиль пользователя
     """
+    #: Имя профиля
     user_name: str
+    #: Токен пользователя
     token: str
-    # Данные о пользователе
+    #: Данные о пользователе
     meta_user: dict[str, str]
     #: Все репозиторию пользователя
-    all_repos: dict[str, Any]
+    all_repos: dict[str, Tall_repos]
 
 
 class ParseGit:
     """
-    .
+    Класс для парсинга профиля
     """
 
     #: Сколько можно получить репозиториев за одно обращение к серверу
@@ -112,16 +128,12 @@ class ParseGit:
                 )
             logger.info(_res.url, flag="URL")
             for x in _res.json():
-                res[x['name']] = {
-                    # public/private
-                    'visibility': x['visibility'],
-                    # Url к проекту
-                    'clone_url': x['clone_url'],
-                    # Дата обновления
-                    'updated_at': x['updated_at'],
-                    # Основная ветка
-                    'default_branch': x['default_branch'],
-                }
+                res[x['name']] = Tall_repos(
+                    visibility=x['visibility'],
+                    clone_url=x["clone_url"],
+                    updated_at=x["updated_at"],
+                    default_branch=x["default_branch"],
+                )
 
         tasks = [self_(page) for page in range(1, count_public_repos // cls.LEN_MAX_PROJ_ONE_PAGE
                                                # для округления в большую строну

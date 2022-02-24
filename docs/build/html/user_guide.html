@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Быстрый старт &mdash; документация git-clones 0.0.1</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/translations.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
+    <link rel="next" title="Описание реализации консольных команд" href="api.html" />
+    <link rel="prev" title="Навигация" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> git-clones
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Оглавление:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Быстрый старт</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">Что это ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">Установка</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">Как пользоваться</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Описание реализации консольных команд</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">git-clones</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Быстрый старт</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/user_guide.rst.txt" rel="nofollow"> Просмотреть исходный код страницы</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>Быстрый старт<a class="headerlink" href="#id1" title="Ссылка на этот заголовок"></a></h1>
+<section id="id2">
+<h2>Что это ?<a class="headerlink" href="#id2" title="Ссылка на этот заголовок"></a></h2>
+<p>Это программа для выполнения <code class="docutils literal notranslate"><span class="pre">git</span></code> команд у нескольких репозиториев. Например, есть у вас более 20 репозиториев, и вы
+очень дорожите ими, что храните их на внешних носителях, и различных устройствах. Скачивать и обновлять каждый
+репозиторий в ручную долго, поэтому создана это программа, для автоматизации этой задачи.</p>
+</section>
+<section id="id3">
+<h2>Установка<a class="headerlink" href="#id3" title="Ссылка на этот заголовок"></a></h2>
+<ol class="arabic simple">
+<li><p>Скачать <code class="docutils literal notranslate"><span class="pre">gitclones.bin</span></code> из репозитория</p></li>
+<li><p>Добавить <code class="docutils literal notranslate"><span class="pre">alias</span></code> в консоль</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span> -g <span class="nv">gitclones</span><span class="o">=</span><span class="s2">&quot;</span>$<span class="s2">ПутьГдеРасположен</span>$<span class="s2">.bin&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Проверим правильность указания пути</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gitclones --help
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h2>Как пользоваться<a class="headerlink" href="#id4" title="Ссылка на этот заголовок"></a></h2>
+<p>Получаем список всех репозиториев у указанного пользователя. В итоге вы получите файл <code class="docutils literal notranslate"><span class="pre">./look.json</span></code> в котором будет
+храниться информация о пользователи, и список репозиториев. Обратите внимание, что приватные репозитории не будут
+получены, их нужно указывать вручную в этом же файле <code class="docutils literal notranslate"><span class="pre">look.json</span></code>. Инструкция как заполнять <code class="docutils literal notranslate"><span class="pre">look.json</span></code>  вручную
+<a class="reference internal" href="api.html#id5" title="logic.getrep_"><code class="xref py py-meth docutils literal notranslate"><span class="pre">logic.getrep_()</span></code></a>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gitclones getrep ИмяПользователяGitHub
+</pre></div>
+</div>
+<p>После того как вы получили список репозиториев, выполните эту команду для их клонирования. В опцию <code class="docutils literal notranslate"><span class="pre">-o</span></code> укажите куда
+клонировать репозитории.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gitclones clones -o ПутьКудаКлонировать
+</pre></div>
+</div>
+<p>После того как вы клонировали репозитории, вы можете за одну команду выполнить <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">pull</span></code> для всех репозиториев.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gitclones cmd pull -i ПутьК_ПапкеС_Репозиториями
+</pre></div>
+</div>
+<blockquote>
+<div><p>Вместо <code class="docutils literal notranslate"><span class="pre">pull</span></code> можно указать любу другую команду</p>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Нижняя область">
+        <a href="index.html" class="btn btn-neutral float-left" title="Навигация" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Предыдущая</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="Описание реализации консольных команд" accesskey="n" rel="next">Следующая <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Denis Kustov.</p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

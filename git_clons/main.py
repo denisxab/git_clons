@@ -1,8 +1,8 @@
-import os
+from os import path
 
-from click import Path, argument, command, group, option, echo
+from click import Path, argument, command, group, option
 
-from logic import get_rep, clones_, cmd_, zip_, PATH_INFO_LOG, PATH_ERROR_LOG
+from logic import getrep_, clones_, cmd_, zip_, getlog_
 
 
 @group()
@@ -14,7 +14,7 @@ def main_group():
 
 @command(help="Получить пути к лог файлам")
 def getlog():
-    echo(f"info: {os.path.abspath(PATH_INFO_LOG)}\nerror: {os.path.abspath(PATH_ERROR_LOG)}\n")
+    getlog_()
 
 
 @command(help="Получить все ссылки репозиториев у указанного пользователя")
@@ -34,34 +34,7 @@ def getlog():
     help="Токен пользователя GitHub",
 )
 def getrep(user_name: str, outfile: str, token: str):
-    """
-    Получить данные с сервера ``GitHub``
-
-    :Пример запуска:
-
-    .. code-block:: text
-
-        python main.py getrep denisxab
-        python main.py getrep denisxab -o /home/denis/prog/GIT/look.json
-
-    Можно вручную добавлять репозитории в конфигурацию``look.json``
-
-    :Пример ручного добавления репозитория:
-
-    .. code-block:: json
-
-        "all_repos": {
-            ...,
-              "$ИмяПроекта$": {
-                "visibility": "private",
-                "clone_url": "https://github.com/denisxab/$ИмяПроекта$.git",
-                "default_branch": "master"
-            }
-            ...,
-        }
-
-    """
-    get_rep(user_name, outfile, token)
+    getrep_(user_name, outfile, token)
 
 
 @command(help="Скачать все репозитории указанные в look.json")
@@ -74,21 +47,7 @@ def getrep(user_name: str, outfile: str, token: str):
     help="Путь для клонирования",
 )
 def clones(path_look: str, outdir: str):
-    """
-    Клонировать репозитории
-
-
-    :Пример запуска:
-
-    .. code-block:: text
-
-        python main.py clones -o /home/denis/PycharmProjects/git_clons/git_clons/test/data_set
-
-    """
-    if outdir is None:
-        outdir = os.path.dirname(path_look)
-
-    clones_(path_look, outdir)
+    clones_(path_look, path.dirname(path_look) if outdir is None else outdir)
 
 
 @command(help="Выполнить команду в каждом репозитории")
@@ -101,15 +60,6 @@ def clones(path_look: str, outdir: str):
     help="Путь до локального хранения репозиториев",
 )
 def cmd(command: str, indir: str):
-    """
-    Обновить репозитории
-
-    :Пример запуска Обновить все репозитории:
-
-    .. code-block:: text
-
-        python main.py cmd pull -i /home/denis/PycharmProjects/git_clons/git_clons/test/data_set
-    """
     cmd_(command, indir)
 
 
@@ -129,15 +79,6 @@ def cmd(command: str, indir: str):
     help="Путь для сохранения архива",
 )
 def zip(outpathzip: str, indir: str):
-    """
-    Архивировать репозитории
-
-    :Пример запуска:
-
-    .. code-block:: text
-
-        python main.py zip -i /home/denis/PycharmProjects/git_clons/git_clons/test/data_set
-    """
     zip_(outpathzip, indir)
 
 
