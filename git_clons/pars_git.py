@@ -6,7 +6,7 @@ from time import process_time
 from typing import Union, Final, TypedDict, Optional
 
 from httpx import get, AsyncClient, Response
-from mg_file.logsmal.logsmal import logger
+from logsmal import logger
 
 
 class ApiGutHub(Enum):

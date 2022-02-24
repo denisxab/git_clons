@@ -30,6 +30,7 @@ def absolute_path_dir(_file: str, back: int = 1) -> Path:
 
 sys.path.insert(0, os.path.abspath('.'))
 
+print(sys.path)
 # Путь к проекту ./../..
 sys.path.insert(0, str(absolute_path_dir(__file__, 3) / "git_clons"))
 

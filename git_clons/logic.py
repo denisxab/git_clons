@@ -2,9 +2,9 @@ from os import path, makedirs, listdir
 from time import time
 from typing import Optional
 
+from logsmal import loglevel, logger
 from mg_file.file.json_file import JsonFile
 from mg_file.file.zip_file import ZippFile
-from mg_file.logsmal.logsmal import logger, loglevel
 from mg_file.pcos.base_pcos import os_exe_thread
 
 from pars_git import ParseGit
@@ -135,7 +135,7 @@ def zip_(outpathzip: Optional[str], indir: str):
         makedirs(f"{indir}/zip", exist_ok=True)
         outpathzip = f"{indir}/zip/git_zip{int(time())}.zip"
 
-    ZippFile(outpathzip).writePath(
+    ZippFile(outpathzip,call_log_info=logger.info,call_log_error=logger.error).writePath(
         indir,
         # Исключим папку в которой находятся архивы
         execute_path={"zip"}

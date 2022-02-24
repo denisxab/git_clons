@@ -22,8 +22,8 @@ exclude = [
 python = "^3.10"
 click = "^8.0.4"
 httpx = "^0.22.0"
-mg-file = "0.1.14"
 tqdm = "^4.62.3"
+mg-file = "0.1.19"
 
 [tool.poetry.dev-dependencies]
 m2r2 = "^0.3.2"
