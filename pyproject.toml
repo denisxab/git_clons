@@ -5,9 +5,9 @@ description = "Клонирование всех репозиториев на G
 authors = ["Denis Kustov <denis-kustov@rambler.ru>"]
 license = "BSD"
 readme = "README.md"
-homepage = "https://github.com/denisxab/"
-repository = "https://github.com/denisxab/"
-documentation = "https://.readthedocs.io/ru/latest/"
+homepage = "https://github.com/denisxab/git_clons.git"
+repository = "https://github.com/denisxab/git_clons.git"
+documentation = "https://git-clons.readthedocs.io/ru/latest/"
 keywords = ["GitHab"]
 exclude = [
     "git_clons/.idea",
