@@ -8,17 +8,20 @@ from mg_file.pcos.base_pcos import os_exe_thread
 
 from pars_git import ParseGit
 
+PATH_INFO_LOG = "./log/info.log"
+PATH_ERROR_LOG = "./log/error.log"
+
 logger.info = loglevel(
     "[INFO]",
-    "./log/info.log",
+    PATH_INFO_LOG,
     console_out=False,
-    max_size_file=1000
+    max_size_file="1mb"
 )
 logger.error = loglevel(
     "[ERROR]",
-    "./log/error.log",
+    PATH_ERROR_LOG,
     console_out=False,
-    max_size_file=1000
+    max_size_file="1mb",
 )
 
 
@@ -32,7 +35,12 @@ def get_rep(user_name: str, outfile: str, token: str):
     :param outfile:
     :param token:
     """
+
+    #:
+    data_in_file = JsonFile(outfile).readFile()
     res = ParseGit(user_name=user_name, token=token)
+    if data_in_file:
+        res['all_repos'].update(data_in_file['all_repos'])
     # Записать данные в файл
     JsonFile(outfile).writeFile(res, sort_keys=False)
 

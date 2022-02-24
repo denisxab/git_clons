@@ -1,14 +1,20 @@
 import os
 
-from click import Path, argument, command, group, option
+from click import Path, argument, command, group, option, echo
 
-from logic import get_rep, clones_, cmd_, zip_
+from logic import get_rep, clones_, cmd_, zip_, PATH_INFO_LOG, PATH_ERROR_LOG
 
 
 @group()
 def main_group():
-    """Менеджер файлов конфигурации"""
-    ...
+    """
+    Менеджер файлов конфигурации
+    """
+
+
+@command(help="Получить пути к лог файлам")
+def getlog():
+    echo(f"info: {os.path.abspath(PATH_INFO_LOG)}\nerror: {os.path.abspath(PATH_ERROR_LOG)}\n")
 
 
 @command(help="Получить все ссылки репозиториев у указанного пользователя")
@@ -36,7 +42,23 @@ def getrep(user_name: str, outfile: str, token: str):
     .. code-block:: text
 
         python main.py getrep denisxab
-        python main.py getrep denisxab -o /home/denis/prog/GIT/look.json;
+        python main.py getrep denisxab -o /home/denis/prog/GIT/look.json
+
+    Можно вручную добавлять репозитории в конфигурацию``look.json``
+
+    :Пример ручного добавления репозитория:
+
+    .. code-block:: json
+
+        "all_repos": {
+            ...,
+              "$ИмяПроекта$": {
+                "visibility": "private",
+                "clone_url": "https://github.com/denisxab/$ИмяПроекта$.git",
+                "default_branch": "master"
+            }
+            ...,
+        }
 
     """
     get_rep(user_name, outfile, token)
@@ -124,6 +146,7 @@ main_group.add_command(getrep)
 main_group.add_command(cmd)
 main_group.add_command(clones)
 main_group.add_command(zip)
+main_group.add_command(getlog)
 
 if __name__ == '__main__':
     main_group()
