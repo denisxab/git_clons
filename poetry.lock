@@ -171,7 +171,7 @@ tornado = {version = "*", markers = "python_version > \"2.7\""}
 
 [[package]]
 name = "logsmal"
-version = "0.0.4"
+version = "0.0.6"
 description = "Создание файлов конфигураци"
 category = "main"
 optional = false
@@ -199,16 +199,17 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "mg-file"
-version = "0.1.18"
+version = "0.1.21"
 description = "Удобное пользование файлами"
 category = "main"
 optional = false
 python-versions = ">=3.10,<4.0"
 
 [package.dependencies]
-logsmal = ">=0.0.4,<0.0.5"
+logsmal = "0.0.6"
 prettytable = ">=3.0.0,<4.0.0"
 PyYAML = ">=6.0,<7.0"
+tqdm = ">=4.62.3,<5.0.0"
 typing-extensions = ">=4.1.1,<5.0.0"
 
 [[package]]
@@ -221,7 +222,7 @@ python-versions = "*"
 
 [[package]]
 name = "nuitka"
-version = "0.7"
+version = "0.7.3"
 description = "Python compiler with full language support and CPython compatibility"
 category = "dev"
 optional = false
@@ -240,7 +241,7 @@ pyparsing = ">=2.0.2,<3.0.5 || >3.0.5"
 
 [[package]]
 name = "prettytable"
-version = "3.1.1"
+version = "3.2.0"
 description = "A simple Python library for easily displaying tabular data in a visually appealing ASCII table format"
 category = "main"
 optional = false
@@ -486,7 +487,7 @@ python-versions = ">= 3.5"
 
 [[package]]
 name = "tqdm"
-version = "4.62.3"
+version = "4.63.0"
 description = "Fast, Extensible Progress Meter"
 category = "main"
 optional = false
@@ -532,7 +533,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "65e7528aa9725465a49b07eba6e5c489b61e5531309dc0d927f7cf8818cb0229"
+content-hash = "4b2e50cc2f3c4f1577e1f0af4b2933d6267934b9f22a7057c206fea4b2d09d4e"
 
 [metadata.files]
 alabaster = [
@@ -595,8 +596,8 @@ livereload = [
     {file = "livereload-2.6.3.tar.gz", hash = "sha256:776f2f865e59fde56490a56bcc6773b6917366bce0c267c60ee8aaf1a0959869"},
 ]
 logsmal = [
-    {file = "logsmal-0.0.4-py3-none-any.whl", hash = "sha256:297b9084d8b6b3c861dac935db5d997f1da7811aeecd5b2f9c9d26fddc528cf1"},
-    {file = "logsmal-0.0.4.tar.gz", hash = "sha256:2d73befa12160ebcb28eec54ec8dee2d6c0fdce2e121347ad5c7bf8d4a463dc0"},
+    {file = "logsmal-0.0.6-py3-none-any.whl", hash = "sha256:f99e197a2035722e43cb1953d78bf7c5766f1bc0012e1bad23b61d12a45ac54c"},
+    {file = "logsmal-0.0.6.tar.gz", hash = "sha256:e3fce854687b95280cd9d5727f91f2e94c469af0cc826d6b181c6a4ca7427f20"},
 ]
 m2r2 = [
     {file = "m2r2-0.3.2-py3-none-any.whl", hash = "sha256:d3684086b61b4bebe2307f15189495360f05a123c9bda2a66462649b7ca236aa"},
@@ -645,23 +646,23 @@ markupsafe = [
     {file = "MarkupSafe-2.1.0.tar.gz", hash = "sha256:80beaf63ddfbc64a0452b841d8036ca0611e049650e20afcb882f5d3c266d65f"},
 ]
 mg-file = [
-    {file = "mg_file-0.1.18-py3-none-any.whl", hash = "sha256:bfc05f44e25b59dddbacd6e878f3d58dd7791e2e153a217274f4fc537b8b82f0"},
-    {file = "mg_file-0.1.18.tar.gz", hash = "sha256:7ec8c3cf5bae7f5ad1ab121ff17c4a9ec9e5c24001ac53c0f209cc99e153489f"},
+    {file = "mg_file-0.1.21-py3-none-any.whl", hash = "sha256:d55c9a2af4739544f7405cf29c38ec3cf1a3528b8468e35bbad7aa752890ced3"},
+    {file = "mg_file-0.1.21.tar.gz", hash = "sha256:e1d6ee5c9431fc8d70449941e687c37e5ecfa06e1def3901e20db0068481123a"},
 ]
 mistune = [
     {file = "mistune-0.8.4-py2.py3-none-any.whl", hash = "sha256:88a1051873018da288eee8538d476dffe1262495144b33ecb586c4ab266bb8d4"},
     {file = "mistune-0.8.4.tar.gz", hash = "sha256:59a3429db53c50b5c6bcc8a07f8848cb00d7dc8bdb431a4ab41920d201d4756e"},
 ]
 nuitka = [
-    {file = "Nuitka-0.7.tar.gz", hash = "sha256:3800001af72e1fb0ab5bd096dedbd88a0fe70ed33bd039fbd9e325866927f80b"},
+    {file = "Nuitka-0.7.3.tar.gz", hash = "sha256:84d84fb68960a218172b549b370453791f930f510de674ca12ec96e79d223205"},
 ]
 packaging = [
     {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},
     {file = "packaging-21.3.tar.gz", hash = "sha256:dd47c42927d89ab911e606518907cc2d3a1f38bbd026385970643f9c5b8ecfeb"},
 ]
 prettytable = [
-    {file = "prettytable-3.1.1-py3-none-any.whl", hash = "sha256:f546d42de21ac14d791c91e4e9814f02271f4a5bf27b894457914be7513dc92b"},
-    {file = "prettytable-3.1.1.tar.gz", hash = "sha256:43c9e23272ca253d038ae76fe3adde89794e92e7fcab2ddf5b94b38642ef4f21"},
+    {file = "prettytable-3.2.0-py3-none-any.whl", hash = "sha256:f6c5ec87c3ef9df5bba1d32d826c1b862ecad0344dddb6082e3562caf71fe085"},
+    {file = "prettytable-3.2.0.tar.gz", hash = "sha256:ae7d96c64100543dc61662b40a28f3b03c0f94a503ed121c6fca2782c5816f81"},
 ]
 pygments = [
     {file = "Pygments-2.11.2-py3-none-any.whl", hash = "sha256:44238f1b60a76d78fc8ca0528ee429702aae011c265fe6a8dd8b63049ae41c65"},
@@ -810,8 +811,8 @@ tornado = [
     {file = "tornado-6.1.tar.gz", hash = "sha256:33c6e81d7bd55b468d2e793517c909b139960b6c790a60b7991b9b6b76fb9791"},
 ]
 tqdm = [
-    {file = "tqdm-4.62.3-py2.py3-none-any.whl", hash = "sha256:8dd278a422499cd6b727e6ae4061c40b48fce8b76d1ccbf5d34fca9b7f925b0c"},
-    {file = "tqdm-4.62.3.tar.gz", hash = "sha256:d359de7217506c9851b7869f3708d8ee53ed70a1b8edbba4dbcb47442592920d"},
+    {file = "tqdm-4.63.0-py2.py3-none-any.whl", hash = "sha256:e643e071046f17139dea55b880dc9b33822ce21613b4a4f5ea57f202833dbc29"},
+    {file = "tqdm-4.63.0.tar.gz", hash = "sha256:1d9835ede8e394bb8c9dcbffbca02d717217113adc679236873eeaac5bc0b3cd"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.1.1-py3-none-any.whl", hash = "sha256:21c85e0fe4b9a155d0799430b0ad741cdce7e359660ccbd8b530613e8df88ce2"},

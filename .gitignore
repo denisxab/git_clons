@@ -6,5 +6,6 @@ dist
 git_clons/__pycache__/
 git_clons/log/
 /main.build/
+gitclones.bin
 
 # poetry publish --username denisxab --password 'ПАРОЛЬ'

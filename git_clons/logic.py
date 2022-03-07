@@ -14,13 +14,13 @@ PATH_ERROR_LOG = "./log/error.log"
 
 logger.info = loglevel(
     "[INFO]",
-    PATH_INFO_LOG,
+    fileout=PATH_INFO_LOG,
     console_out=True,
     max_size_file="1mb"
 )
 logger.error = loglevel(
     "[ERROR]",
-    PATH_ERROR_LOG,
+    fileout=PATH_ERROR_LOG,
     console_out=True,
     max_size_file="1mb",
 )
@@ -135,7 +135,7 @@ def zip_(outpathzip: Optional[str], indir: str):
         makedirs(f"{indir}/zip", exist_ok=True)
         outpathzip = f"{indir}/zip/git_zip{int(time())}.zip"
 
-    ZippFile(outpathzip,call_log_info=logger.info,call_log_error=logger.error).writePath(
+    ZippFile(outpathzip, call_log_info=logger.info, call_log_error=logger.error).writePath(
         indir,
         # Исключим папку в которой находятся архивы
         execute_path={"zip"}
