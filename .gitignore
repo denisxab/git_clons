@@ -2,6 +2,7 @@
 /venvs
 /.idea
 dist
+/git_clons/log/
 /__pycache__
 git_clons/__pycache__/
 git_clons/log/
