@@ -2,28 +2,18 @@ from os import path, makedirs, listdir
 from time import time
 from typing import Optional
 
-from logsmal import loglevel, logger
+from logsmal import logger
 from mg_file.file.json_file import JsonFile
 from mg_file.file.zip_file import ZippFile
-from mg_file.pcos.base_pcos import os_exe_thread
+from mg_file.pcos.base_pcos import os_exe_async, type_os_res
 
 from pars_git import ParseGit
 
 PATH_INFO_LOG = "./log/info.log"
 PATH_ERROR_LOG = "./log/error.log"
 
-logger.info = loglevel(
-    "[INFO]",
-    fileout=PATH_INFO_LOG,
-    console_out=True,
-    max_size_file="1mb"
-)
-logger.error = loglevel(
-    "[ERROR]",
-    fileout=PATH_ERROR_LOG,
-    console_out=True,
-    max_size_file="1mb",
-)
+logger.info.fileout = PATH_INFO_LOG
+logger.error.fileout = PATH_ERROR_LOG
 
 
 def getrep_(user_name: str, outfile: str, token: str):
@@ -91,7 +81,9 @@ def clones_(path_look: str, outdir: str):
     for _name_rep, _val_rep in res["all_repos"].items():
         command_list.append(f"git clone {_val_rep['clone_url']} {path.join(outdir, _name_rep)}")
 
-    os_exe_thread("CLONE", command_list, call_log_info=logger.info, call_log_error=logger.error)
+    res: list[type_os_res] = os_exe_async(command_list=command_list)
+    for _x in res:
+        _x.__str__(logger_info=logger.info, logger_error=logger.error, flag="CLONES")
 
 
 def cmd_(command: str, indir: str, ):
@@ -113,7 +105,9 @@ def cmd_(command: str, indir: str, ):
         if path.isdir(path.join(indir, _path)):
             command_list.append(f"cd {path.join(indir, _path)} && git {command}")
 
-    os_exe_thread(command, command_list, call_log_info=logger.info, call_log_error=logger.error)
+    res: list[type_os_res] = os_exe_async(command_list=command_list)
+    for _x in res:
+        _x.__str__(logger_info=logger.info, logger_error=logger.error, flag="CMD")
 
 
 def zip_(outpathzip: Optional[str], indir: str):

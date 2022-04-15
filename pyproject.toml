@@ -23,14 +23,14 @@ python = "^3.10"
 click = "^8.0.4"
 httpx = "^0.22.0"
 tqdm = "^4.62.3"
-mg-file = "0.1.21"
+mg-file = "0.1.26"
 
 [tool.poetry.dev-dependencies]
 m2r2 = "^0.3.2"
 sphinx-autobuild = "^2021.3.14"
 sphinx-rtd-theme = "^1.0.0"
 Sphinx = "^4.4.0"
-Nuitka = "^0.7"
+nuitka = "^0.7"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
