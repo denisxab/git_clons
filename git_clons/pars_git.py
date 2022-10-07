@@ -1,11 +1,10 @@
 import asyncio
 from enum import Enum
 from pprint import pformat
-from re import search
 import re
 from string import Template
 from time import process_time
-from typing import Literal, Union, Final, TypedDict, Optional
+from typing import Union, Final, TypedDict, Optional
 
 from httpx import get, AsyncClient, Response
 from logsmal import logger
