@@ -7,7 +7,8 @@ from mg_file.file.json_file import JsonFile
 from mg_file.file.zip_file import ZippFile
 from mg_file.pcos.base_pcos import os_exe_async, type_os_res
 
-from pars_git import ParseGit
+from pars_git import ParseGit, TypeRepos
+import jmespath
 
 PATH_INFO_LOG = "./log/info.log"
 PATH_ERROR_LOG = "./log/error.log"
@@ -25,39 +26,18 @@ def getrep_(user_name: str, outfile: str, token: str):
     :param outfile: Куда поместить файл с результатом
     :param token: Токен пользователя GitHub *пока не используется в логики программы*
 
-
-    :Пример запуска:
-
-    .. code-block:: text
-
-        python main.py getrep denisxab -o /home/denis/prog/GIT/look.json
-
-
-    .. note::
-
-        Можно вручную добавлять репозитории в конфигурацию ``look.json``.
-        Вот структура для храня ``look.json`` :meth:`pars_git.Tall_repos`
-
-        :Пример ручного добавления репозитория:
-
-        .. code-block:: json
-
-            "all_repos": {
-                ...,
-                  "ИмяПроекта": {
-                    "visibility": "private",
-                    "clone_url": "https://USERNAME:TOKEN@github.com/denisxab/ИмяПроекта.git",
-                    "default_branch": "master"
-                }
-                ...,
-            }
-
     """
     #: Получить данные из существующей конфигурации
     data_in_file = JsonFile(outfile).readFile()
     res = ParseGit(user_name=user_name, token=token)
     if data_in_file:
-        res['all_repos'].update(data_in_file['all_repos'])
+        # Переносим закрытые репозитории из текущего файла. И обновляем токен из URL на тот который мы передали 
+        res['all_repos'].update(
+            {
+                k: v for k, v in data_in_file['all_repos'].items()
+                if v['visibility'] == TypeRepos.private.value
+            }
+        )
     # Записать данные в файл
     JsonFile(outfile).writeFile(res, sort_keys=False)
     print("END")
@@ -79,11 +59,13 @@ def clones_(path_look: str, outdir: str):
     command_list: list[str] = []
     res: dict = JsonFile(path_look).readFile()
     for _name_rep, _val_rep in res["all_repos"].items():
-        command_list.append(f"git clone {_val_rep['clone_url']} {path.join(outdir, _name_rep)}")
+        command_list.append(
+            f"git clone {_val_rep['clone_url']} {path.join(outdir, _name_rep)}")
 
     res: list[type_os_res] = os_exe_async(command_list=command_list)
     for _x in res:
-        _x.__str__(logger_info=logger.info, logger_error=logger.error, flag="CLONES")
+        _x.__str__(logger_info=logger.info,
+                   logger_error=logger.error, flag="CLONES")
 
 
 def cmd_(command: str, indir: str, ):
@@ -103,11 +85,13 @@ def cmd_(command: str, indir: str, ):
     command_list: list[str] = []
     for _path in listdir(indir):
         if path.isdir(path.join(indir, _path)):
-            command_list.append(f"cd {path.join(indir, _path)} && git {command}")
+            command_list.append(
+                f"cd {path.join(indir, _path)} && git {command}")
 
     res: list[type_os_res] = os_exe_async(command_list=command_list)
     for _x in res:
-        _x.__str__(logger_info=logger.info, logger_error=logger.error, flag="CMD")
+        _x.__str__(logger_info=logger.info,
+                   logger_error=logger.error, flag="CMD")
 
 
 def zip_(outpathzip: Optional[str], indir: str):
@@ -140,4 +124,5 @@ def getlog_():
     """
     Получить пути к лог файлам
     """
-    print(f"info: {path.abspath(PATH_INFO_LOG)}\nerror: {path.abspath(PATH_ERROR_LOG)}\n")
+    print(
+        f"info: {path.abspath(PATH_INFO_LOG)}\nerror: {path.abspath(PATH_ERROR_LOG)}\n")
