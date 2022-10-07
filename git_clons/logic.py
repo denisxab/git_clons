@@ -1,14 +1,10 @@
-from os import path, makedirs, listdir
-from time import time
-from typing import Optional
-
+from os import path,  listdir
+import re
 from logsmal import logger
 from mg_file.file.json_file import JsonFile
-from mg_file.file.zip_file import ZippFile
 from mg_file.pcos.base_pcos import os_exe_async, type_os_res
 
 from pars_git import ParseGit, TypeRepos
-import jmespath
 
 PATH_INFO_LOG = "./log/info.log"
 PATH_ERROR_LOG = "./log/error.log"
@@ -31,13 +27,16 @@ def getrep_(user_name: str, outfile: str, token: str):
     data_in_file = JsonFile(outfile).readFile()
     res = ParseGit(user_name=user_name, token=token)
     if data_in_file:
-        # Переносим закрытые репозитории из текущего файла. И обновляем токен из URL на тот который мы передали 
-        res['all_repos'].update(
-            {
-                k: v for k, v in data_in_file['all_repos'].items()
-                if v['visibility'] == TypeRepos.private.value
-            }
-        )
+        # Переносим закрытые репозитории из текущего файла. И обновляем токен в URL клонирования, на тот который мы передали.
+        d = {}
+        for k, v in data_in_file['all_repos'].items():
+            # Только закрытые репозитории
+            if v['visibility'] == TypeRepos.private.value:
+                # Обновляем токен
+                v['clone_url'] = token.join(
+                    re.search('(.+:).+(@.+)', v['clone_url']).group(1, 2))
+                d[k] = v
+        res['all_repos'].update(d)
     # Записать данные в файл
     JsonFile(outfile).writeFile(res, sort_keys=False)
     print("END")
@@ -94,30 +93,30 @@ def cmd_(command: str, indir: str, ):
                    logger_error=logger.error, flag="CMD")
 
 
-def zip_(outpathzip: Optional[str], indir: str):
-    """
-    Архивировать репозитории
+# def zip_(outpathzip: Optional[str], indir: str):
+#     """
+#     Архивировать репозитории
 
-    :param outpathzip: Куда сохранить архив. По умолчанию там же где
-        ``indir`` в папке `zip/git_zip{время}.zip`
-    :param indir: Путь к папке с репозиториями
+#     :param outpathzip: Куда сохранить архив. По умолчанию там же где
+#         ``indir`` в папке `zip/git_zip{время}.zip`
+#     :param indir: Путь к папке с репозиториями
 
 
-    :Пример запуска:
+#     :Пример запуска:
 
-    .. code-block:: text
+#     .. code-block:: text
 
-        python main.py zip -i /home/denis/prog/GIT/
-    """
-    if outpathzip is None:
-        makedirs(f"{indir}/zip", exist_ok=True)
-        outpathzip = f"{indir}/zip/git_zip{int(time())}.zip"
+#         python main.py zip -i /home/denis/prog/GIT/
+#     """
+#     if outpathzip is None:
+#         makedirs(f"{indir}/zip", exist_ok=True)
+#         outpathzip = f"{indir}/zip/git_zip{int(time())}.zip"
 
-    ZippFile(outpathzip, call_log_info=logger.info, call_log_error=logger.error).writePath(
-        indir,
-        # Исключим папку в которой находятся архивы
-        execute_path={"zip"}
-    )
+#     ZippFile(outpathzip, call_log_info=logger.info, call_log_error=logger.error).writePath(
+#         indir,
+#         # Исключим папку в которой находятся архивы
+#         execute_path={"zip"}
+#     )
 
 
 def getlog_():

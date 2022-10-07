@@ -81,7 +81,7 @@ def cmd(command: str, indir: str):
 #     help="Путь для сохранения архива",
 # )
 # def zip(outpathzip: str, indir: str):
-#     zip_(outpathzip, indir)
+    zip_(outpathzip, indir)
 
 
 # Добавляем в группу команду
@@ -94,6 +94,6 @@ main_group.add_command(getlog)
 if __name__ == '__main__':
     main_group()
     # user_name='denisxab'
-    # token="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"
+    # token="ghp_1111"
     # outfile='/media/denis/dd19b13d-bd85-46bb-8db9-5b8f6cf7a825/MyProject/PycharmProjects/git_clons/git_clons/test/.look.json'
     # getrep_(user_name, outfile, token)
