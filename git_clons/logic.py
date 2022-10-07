@@ -56,6 +56,7 @@ def clones_(path_look: str, outdir: str):
         python main.py clones -o /home/denis/prog/GIT/
     """
     command_list: list[str] = []
+    # TODO: Реализовать скачивание GIsts из конфигураций
     res: dict = JsonFile(path_look).readFile()
     for _name_rep, _val_rep in res["all_repos"].items():
         command_list.append(
