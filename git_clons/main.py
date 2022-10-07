@@ -5,7 +5,6 @@ from click import Path, argument, command, group, option
 from logic import getrep_, clones_, cmd_, zip_, getlog_
 
 
-
 @group()
 def main_group():
     """
@@ -81,7 +80,7 @@ def cmd(command: str, indir: str):
 #     help="Путь для сохранения архива",
 # )
 # def zip(outpathzip: str, indir: str):
-    zip_(outpathzip, indir)
+#    zip_(outpathzip, indir)
 
 
 # Добавляем в группу команду
