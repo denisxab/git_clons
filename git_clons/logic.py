@@ -49,16 +49,10 @@ def getconf_(user_name: str, outfile: str, token: str):
 
 def sync_(path_conf: str, outdir: str):
     """
-    Клонировать репозитории
+    Синхронизация с конфигурациями
 
     :param path_conf: Путь к файлу с настройками
     :param outdir: Куда клонировать репозитории
-
-    :Пример запуска:
-
-    .. code-block:: text
-
-        python main.py clones -o /home/denis/prog/GIT/
     """
     command_list: list[str] = []
     # TODO: Реализовать скачивание GIsts из конфигураций
@@ -69,8 +63,10 @@ def sync_(path_conf: str, outdir: str):
 
     res: list[type_os_res] = os_exe_async(command_list=command_list)
     for _x in res:
-        _x.__str__(logger_info=logger.info,
-                   logger_error=logger.error, flag="CLONES")
+        _x.__str__(
+            logger_info=logger.info,
+            logger_error=logger.error, flag="CLONES"
+        )
 
 
 def cmd_(command: str, indir: str, ):

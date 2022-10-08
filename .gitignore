@@ -6,6 +6,8 @@ dist
 /__pycache__
 git_clons/__pycache__/
 git_clons/log/
+.pytest_cache
+.vscode
 /main.build/
 gitclones.bin
 
