@@ -54,19 +54,22 @@ def sync_(path_conf: str, outdir: str):
     :param path_conf: Путь к файлу с настройками
     :param outdir: Куда клонировать репозитории
     """
-    command_list: list[str] = []
+
     # TODO: Реализовать скачивание GIsts из конфигураций
     res: dict = JsonFile(path_conf).readFile()
-    for _name_rep, _val_rep in res["all_repos"].items():
-        command_list.append(
-            f"git clone {_val_rep['clone_url']} {path.join(outdir, _name_rep)}")
+    # Для синхронизации репозиториев
+    command_list: list[str] = [
+        f"git clone {_val_rep['clone_url']} {path.join(outdir, _name_rep)}"
+        for _name_rep, _val_rep in res["all_repos"].items()
+    ]
+    # Для синхронизации Gits
 
-    res: list[type_os_res] = os_exe_async(command_list=command_list)
-    for _x in res:
-        _x.__str__(
-            logger_info=logger.info,
-            logger_error=logger.error, flag="CLONES"
-        )
+    # res: list[type_os_res] = os_exe_async(command_list=command_list)
+    # for _x in res:
+    #     _x.__str__(
+    #         logger_info=logger.info,
+    #         logger_error=logger.error, flag="CLONES"
+    #     )
 
 
 def cmd_(command: str, indir: str, ):
