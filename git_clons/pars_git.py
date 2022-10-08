@@ -56,9 +56,11 @@ class T_all_gists_files(TypedDict):
     Структура словаря для хранения файлов из Gists
     """
     #: Ссылка на конкретную версию(последнею на момент выполнения) на текст gists {ИмяФайла:RawСсылка}
-    raw_url_version:  str
+    raw_url_version: str
     #: Ссылка на самую свежую версию(версия не указан поэтому возьмется самая последняя)текста gitst {ИмяФайла:RawСсылка}
-    raw_url_actual:  str
+    raw_url_actual: str
+    #: Версия последняя синхронизированная версия Gits
+    version: str
 
 
 class T_all_gists(TypedDict):
@@ -110,7 +112,7 @@ class ParseGit:
             user_name=user_name,
             token=token,
             meta_user=info,
-            all_repos=asyncio.run(cls.getRepository(
+            all_repos=asyncio.run(cls.getConfository(
                 user_name, info["count_public_repos"], token)),
             all_gists=asyncio.run(cls.getGists(
                 user_name, info["count_public_gists"], token)),
@@ -120,7 +122,8 @@ class ParseGit:
         return GitUser
 
     @classmethod
-    def getInfo(cls, user_name: str, token: Optional[str]) -> dict[str, Union[str, int]]:
+    def getInfo(cls, user_name: str,
+                token: Optional[str]) -> dict[str, Union[str, int]]:
         """
         Получить информацию о пользователе
 
@@ -176,24 +179,30 @@ class ParseGit:
                         k: T_all_gists_files(
                             raw_url_version=v['raw_url'],
                             raw_url_actual=''.join(re.search(
-                                '(.+\/raw\/).+\/(.+)',
+                                '(.+\\/raw\\/).+\\/(.+)',
                                 v['raw_url']
-                            ).group(1, 2))
+                            ).group(1, 2)),
+                            version=re.search(
+                                '.+\\/raw\\/(.+)\\/.+',
+                                v['raw_url']
+                            ).group(1)
                         )
                         for k, v in x['files'].items()
                     },
                 )
 
         tasks = [self_(page) for page in range(1, count_public_gits // cls.LEN_MAX_PROJ_ONE_PAGE
-                                               # для округления в большую строну
+                                               # для округления в большую
+                                               # строну
                                                + 1
-                                               # для того чтобы даже одна страница загрузилась
+                                               # для того чтобы даже одна
+                                               # страница загрузилась
                                                + 1)]
         await asyncio.gather(*tasks)
         return res
 
     @classmethod
-    async def getRepository(cls, user_name: str, count_public_repos: int, token: Optional[str]) \
+    async def getConfository(cls, user_name: str, count_public_repos: int, token: Optional[str]) \
             -> dict[str, dict[Union[str, int]]]:
         """
         Получить url всех открытых репозиториев у пользователя
@@ -228,9 +237,11 @@ class ParseGit:
                 )
 
         tasks = [self_(page) for page in range(1, count_public_repos // cls.LEN_MAX_PROJ_ONE_PAGE
-                                               # для округления в большую строну
+                                               # для округления в большую
+                                               # строну
                                                + 1
-                                               # для того чтобы даже одна страница загрузилась
+                                               # для того чтобы даже одна
+                                               # страница загрузилась
                                                + 1)]
         await asyncio.gather(*tasks)
         return res

@@ -1,10 +1,12 @@
-from os import path,  listdir
+from os import path, listdir
 import re
 from logsmal import logger
 from mg_file.file.json_file import JsonFile
 from mg_file.pcos.base_pcos import os_exe_async, type_os_res
 
-from pars_git import ParseGit, TypeRepos
+
+from .pars_git import ParseGit, TypeRepos
+
 
 PATH_INFO_LOG = "./log/info.log"
 PATH_ERROR_LOG = "./log/error.log"
@@ -13,10 +15,10 @@ logger.info.fileout = PATH_INFO_LOG
 logger.error.fileout = PATH_ERROR_LOG
 
 
-def getrep_(user_name: str, outfile: str, token: str):
+def getconf_(user_name: str, outfile: str, token: str):
     """
     Получить данные с сервера ``GitHub``, по умолчанию данные сохранятся
-    в файл ``./look.json``
+    в файл ``./gitconf.json``
 
     :param user_name: Имя пользователя GitHub
     :param outfile: Куда поместить файл с результатом
@@ -27,14 +29,17 @@ def getrep_(user_name: str, outfile: str, token: str):
     data_in_file = JsonFile(outfile).readFile()
     res = ParseGit(user_name=user_name, token=token)
     if data_in_file:
-        # Переносим закрытые репозитории из текущего файла. И обновляем токен в URL клонирования, на тот который мы передали.
+        # Переносим закрытые репозитории из текущего файла. И обновляем токен в
+        # URL клонирования, на тот который мы передали.
         d = {}
         for k, v in data_in_file['all_repos'].items():
             # Только закрытые репозитории
             if v['visibility'] == TypeRepos.private.value:
-                # Обновляем токен
-                v['clone_url'] = token.join(
-                    re.search('(.+:).+(@.+)', v['clone_url']).group(1, 2))
+                # Обновляем токен, если он передан
+                if token:
+                    v['clone_url'] = token.join(
+                        re.search('(.+:).+(@.+)', v['clone_url']).group(1, 2)
+                    )
                 d[k] = v
         res['all_repos'].update(d)
     # Записать данные в файл
@@ -42,11 +47,11 @@ def getrep_(user_name: str, outfile: str, token: str):
     print("END")
 
 
-def clones_(path_look: str, outdir: str):
+def sync_(path_conf: str, outdir: str):
     """
     Клонировать репозитории
 
-    :param path_look: Путь к файлу с настройками
+    :param path_conf: Путь к файлу с настройками
     :param outdir: Куда клонировать репозитории
 
     :Пример запуска:
@@ -57,7 +62,7 @@ def clones_(path_look: str, outdir: str):
     """
     command_list: list[str] = []
     # TODO: Реализовать скачивание GIsts из конфигураций
-    res: dict = JsonFile(path_look).readFile()
+    res: dict = JsonFile(path_conf).readFile()
     for _name_rep, _val_rep in res["all_repos"].items():
         command_list.append(
             f"git clone {_val_rep['clone_url']} {path.join(outdir, _name_rep)}")

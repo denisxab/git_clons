@@ -1,6 +1,6 @@
 {
     "user_name": "denisxab",
-    "token": "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",
+    "token": null,
     "meta_user": {
         "login": "denisxab",
         "id": 47678176,
@@ -378,7 +378,7 @@
         },
         "mydoc": {
             "visibility": "private",
-            "clone_url": "https://denisxab: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@github.com/denisxab/mydoc.git",
+            "clone_url": "https://denisxab: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@github.com/denisxab/mydoc.git",
             "updated_at": "2019-08-17T11:30:18Z",
             "default_branch": "master"
         }
@@ -391,7 +391,8 @@
             "files": {
                 "convert_charset.py": {
                     "raw_url_version": "https://gist.githubusercontent.com/denisxab/9c3d1cfbcbabed5fb40a9b2d0cd971a6/raw/a127c72415b3312714a478053f880764f08b1f73/convert_charset.py",
-                    "raw_url_actual": "https://gist.githubusercontent.com/denisxab/9c3d1cfbcbabed5fb40a9b2d0cd971a6/raw/convert_charset.py"
+                    "raw_url_actual": "https://gist.githubusercontent.com/denisxab/9c3d1cfbcbabed5fb40a9b2d0cd971a6/raw/convert_charset.py",
+                    "version": "a127c72415b3312714a478053f880764f08b1f73"
                 }
             }
         },
@@ -402,7 +403,8 @@
             "files": {
                 "НезависимыйHTMLФайл.py": {
                     "raw_url_version": "https://gist.githubusercontent.com/denisxab/3c22dbf14dd11b06f30f1a6997a136b5/raw/f54979f4ddc5252481202236ab7f812cec225dda/%D0%9D%D0%B5%D0%B7%D0%B0%D0%B2%D0%B8%D1%81%D0%B8%D0%BC%D1%8B%D0%B9HTML%D0%A4%D0%B0%D0%B9%D0%BB.py",
-                    "raw_url_actual": "https://gist.githubusercontent.com/denisxab/3c22dbf14dd11b06f30f1a6997a136b5/raw/%D0%9D%D0%B5%D0%B7%D0%B0%D0%B2%D0%B8%D1%81%D0%B8%D0%BC%D1%8B%D0%B9HTML%D0%A4%D0%B0%D0%B9%D0%BB.py"
+                    "raw_url_actual": "https://gist.githubusercontent.com/denisxab/3c22dbf14dd11b06f30f1a6997a136b5/raw/%D0%9D%D0%B5%D0%B7%D0%B0%D0%B2%D0%B8%D1%81%D0%B8%D0%BC%D1%8B%D0%B9HTML%D0%A4%D0%B0%D0%B9%D0%BB.py",
+                    "version": "f54979f4ddc5252481202236ab7f812cec225dda"
                 }
             }
         },
@@ -413,11 +415,13 @@
             "files": {
                 "admin.py": {
                     "raw_url_version": "https://gist.githubusercontent.com/denisxab/f62f77debbe3f889ccf944b4d6f07e65/raw/c4e5e77c330721aab7b24fd9bcc0b7ba3c10e783/admin.py",
-                    "raw_url_actual": "https://gist.githubusercontent.com/denisxab/f62f77debbe3f889ccf944b4d6f07e65/raw/admin.py"
+                    "raw_url_actual": "https://gist.githubusercontent.com/denisxab/f62f77debbe3f889ccf944b4d6f07e65/raw/admin.py",
+                    "version": "c4e5e77c330721aab7b24fd9bcc0b7ba3c10e783"
                 },
                 "logic_register.py.py": {
                     "raw_url_version": "https://gist.githubusercontent.com/denisxab/f62f77debbe3f889ccf944b4d6f07e65/raw/c8cd3b5e92c1e178f597d069ec10afd4771ac9bd/logic_register.py.py",
-                    "raw_url_actual": "https://gist.githubusercontent.com/denisxab/f62f77debbe3f889ccf944b4d6f07e65/raw/logic_register.py.py"
+                    "raw_url_actual": "https://gist.githubusercontent.com/denisxab/f62f77debbe3f889ccf944b4d6f07e65/raw/logic_register.py.py",
+                    "version": "c8cd3b5e92c1e178f597d069ec10afd4771ac9bd"
                 }
             }
         }
