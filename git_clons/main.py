@@ -1,8 +1,9 @@
 from os import path
+import pathlib
 
 from click import Path, argument, command, group, option
 
-from .logic import getconf_, sync_, cmd_, getlog_
+from logic import getconf_, sync_, cmd_, getlog_
 
 
 @group()
@@ -48,7 +49,7 @@ def getconf(user_name: str, outfile: str, token: str):
     help="Путь для клонирования",
 )
 def sync(path_conf: str, outdir: str):
-    sync_(path_conf, path.dirname(path_conf) if outdir is None else outdir)
+    sync_(path_conf, pathlib.Path(path.dirname(path_conf)) if outdir is None else outdir)
 
 
 @command(help="Выполнить команду в каждом репозитории")

@@ -8,10 +8,11 @@ path_conf = path_sync / "gitconf.json"
 
 def test_getconf():
     user_name = 'denisxab'
-    token = None  # "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"
+    token = "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"
     outfile = path_conf
     getconf_(user_name, outfile, token)
 
 
 def test_sync():
     sync_(path_conf, path_sync)
+

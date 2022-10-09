@@ -55,11 +55,11 @@ class T_all_gists_files(TypedDict):
     """
     Структура словаря для хранения файлов из Gists
     """
-    #: Ссылка на конкретную версию(последнею на момент выполнения) на текст gists {ИмяФайла:RawСсылка}
-    raw_url_version: str
+    # #: Ссылка на конкретную версию(последнею на момент выполнения) на текст gists {ИмяФайла:RawСсылка}
+    # raw_url_version: str
     #: Ссылка на самую свежую версию(версия не указан поэтому возьмется самая последняя)текста gitst {ИмяФайла:RawСсылка}
-    raw_url_actual: str
-    #: Версия последняя синхронизированная версия Gits
+    raw_url: str
+    # : Версия последняя синхронизированная версия Gits
     version: str
 
 
@@ -112,7 +112,7 @@ class ParseGit:
             user_name=user_name,
             token=token,
             meta_user=info,
-            all_repos=asyncio.run(cls.getConfository(
+            all_repos=asyncio.run(cls.getRep(
                 user_name, info["count_public_repos"], token)),
             all_gists=asyncio.run(cls.getGists(
                 user_name, info["count_public_gists"], token)),
@@ -177,20 +177,18 @@ class ParseGit:
                     html_url=x['html_url'],
                     files={
                         k: T_all_gists_files(
-                            raw_url_version=v['raw_url'],
-                            raw_url_actual=''.join(re.search(
+                            raw_url=''.join(re.search(
                                 '(.+\\/raw\\/).+\\/(.+)',
-                                v['raw_url']
+                                v['raw_url'],
                             ).group(1, 2)),
-                            version=re.search(
+                            version=''.join(re.search(
                                 '.+\\/raw\\/(.+)\\/.+',
-                                v['raw_url']
-                            ).group(1)
+                                v['raw_url'],
+                            ).group(1)),
                         )
                         for k, v in x['files'].items()
                     },
                 )
-
         tasks = [self_(page) for page in range(1, count_public_gits // cls.LEN_MAX_PROJ_ONE_PAGE
                                                # для округления в большую
                                                # строну
@@ -202,7 +200,7 @@ class ParseGit:
         return res
 
     @classmethod
-    async def getConfository(cls, user_name: str, count_public_repos: int, token: Optional[str]) \
+    async def getRep(cls, user_name: str, count_public_repos: int, token: Optional[str]) \
             -> dict[str, dict[Union[str, int]]]:
         """
         Получить url всех открытых репозиториев у пользователя
@@ -250,10 +248,9 @@ class ParseGit:
     def _getHeaders(token: Optional[str]):
         #: Заголовки для запроса в формате json
         headers = {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
+            "Accept": "application/vnd.github+json",
         }
         # Аутентификация по токину
         if token:
-            headers["Authorization"] = f"Bearer {token}"
+            headers["Authorization"] = f"{token}"
         return headers

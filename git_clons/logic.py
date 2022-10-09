@@ -1,11 +1,15 @@
-from os import path, listdir
+import pprint
+import subprocess
+from os import makedirs, path, listdir
+import os
+from pathlib import Path
 import re
 from logsmal import logger
 from mg_file.file.json_file import JsonFile
 from mg_file.pcos.base_pcos import os_exe_async, type_os_res
+from httpx import ConnectTimeout
 
-
-from .pars_git import ParseGit, TypeRepos
+from pars_git import ParseGit, T_all_gists, T_all_gists_files, TypeRepos
 
 
 PATH_INFO_LOG = "./log/info.log"
@@ -27,49 +31,114 @@ def getconf_(user_name: str, outfile: str, token: str):
     """
     #: Получить данные из существующей конфигурации
     data_in_file = JsonFile(outfile).readFile()
-    res = ParseGit(user_name=user_name, token=token)
-    if data_in_file:
-        # Переносим закрытые репозитории из текущего файла. И обновляем токен в
-        # URL клонирования, на тот который мы передали.
-        d = {}
-        for k, v in data_in_file['all_repos'].items():
-            # Только закрытые репозитории
-            if v['visibility'] == TypeRepos.private.value:
-                # Обновляем токен, если он передан
-                if token:
-                    v['clone_url'] = token.join(
-                        re.search('(.+:).+(@.+)', v['clone_url']).group(1, 2)
-                    )
-                d[k] = v
-        res['all_repos'].update(d)
-    # Записать данные в файл
-    JsonFile(outfile).writeFile(res, sort_keys=False)
-    print("END")
+    try:
+        res = ParseGit(user_name=user_name, token=token)
+        if data_in_file:
+            # Переносим закрытые репозитории из текущего файла. И обновляем токен в
+            # URL клонирования, на тот который мы передали.
+            d = {}
+            for k, v in data_in_file['all_repos'].items():
+                # Только закрытые репозитории
+                if v['visibility'] == TypeRepos.private.value:
+                    # Обновляем токен, если он передан
+                    if token:
+                        v['clone_url'] = token.join(
+                            re.search('(.+:).+(@.+)',
+                                      v['clone_url']).group(1, 2)
+                        )
+                    d[k] = v
+            res['all_repos'].update(d)
+        # Записать данные в файл
+        JsonFile(outfile).writeFile(res, sort_keys=False)
+        print("END")
+    except ConnectTimeout as e:
+        logger.error(e, 'Привешен лимит ожидания')
 
 
-def sync_(path_conf: str, outdir: str):
+def sync_(path_conf: Path, outdir: str):
     """
     Синхронизация с конфигурациями
 
     :param path_conf: Путь к файлу с настройками
     :param outdir: Куда клонировать репозитории
+
+
+    Итоговая структура:
+
+
     """
+    # Конфигурация
+    conf: dict = JsonFile(path_conf).readFile()
+    # Список команд для асинхронного выполнения.
+    async_command_list: list[str] = []
 
-    # TODO: Реализовать скачивание GIsts из конфигураций
-    res: dict = JsonFile(path_conf).readFile()
-    # Для синхронизации репозиториев
-    command_list: list[str] = [
-        f"git clone {_val_rep['clone_url']} {path.join(outdir, _name_rep)}"
-        for _name_rep, _val_rep in res["all_repos"].items()
-    ]
-    # Для синхронизации Gits
+    def sync_rep():
+        # 0. Для синхронизации репозиториев
+        path_dir_rep = outdir / 'rep'
+        makedirs(path_dir_rep, exist_ok=True)
+        all_repos: dict[str, T_all_gists] = conf["all_repos"]
+        async_command_rep: list[str] = []
+        # 1. Проверяем наличие репозитория
+        dir_rep: set[str] = set(os.listdir(path_dir_rep))
+        for _name_rep, _val_rep in all_repos.items():
+            path_rep: Path = path_dir_rep / _name_rep
+            # 1.1. Если нет репозитория то формируем команды для его скачивания
+            if not _name_rep in dir_rep:
+                async_command_rep.append(
+                    f"git clone {_val_rep['clone_url']} {path_rep}")
+            # 1.2. Если есть репозитория, то проверить его url.
+            else:
+                # получаем url для кодирования репозитория
+                url_rep = subprocess.check_output(
+                    f"cd {path_rep.resolve()} && git remote get-url origin", shell=True)
+                # 1.2.1 Если url не совпадает(например из за семы токена), то обновляем url в репозитории.
+                if url_rep != _val_rep['clone_url']:
+                    subprocess.check_output(
+                        f"cd {path_rep.resolve()} && git remote set-url origin {_val_rep['clone_url']}", shell=True)
+                # 1.2.2 Формируем команды для `pull``
+                async_command_rep.append(f"cd {path_rep.resolve()} && git pull")
+        return async_command_rep
+    async_command_list.extend(sync_rep())
 
-    # res: list[type_os_res] = os_exe_async(command_list=command_list)
-    # for _x in res:
-    #     _x.__str__(
-    #         logger_info=logger.info,
-    #         logger_error=logger.error, flag="CLONES"
-    #     )
+    def sync_gists():
+        # 0. Для синхронизации Gists
+        async_command_gists: list[str] = []
+        p_dir_gists = outdir / 'gits'
+        makedirs(p_dir_gists, exist_ok=True)
+        all_gists: dict[str, T_all_gists] = conf["all_gists"]
+        for _name_gists, _val_gists in all_gists.items():
+            _val_gists: T_all_gists
+            # Папка с Gists в кортом хранятся сами файлы
+            p_dir_filename_gists = p_dir_gists / _name_gists
+            # 1. Работаем с файлами Gists
+            for g_name, g_val in _val_gists["files"].items():
+                g_val: T_all_gists_files
+                # 1.1 Делаем корректное название для папки с Gists
+                _name_gists_file = re.search('(.+)(?:\.|\Z)', g_name).group(1)
+                # 1.2 Создаем папки с именем файла Gists, это нужно для того чтобы хранить несколько версий файла gists
+                path_name_gists_file: Path = p_dir_filename_gists/_name_gists_file
+                makedirs(path_name_gists_file, exist_ok=True)
+                path_name_gists_file_version = path_name_gists_file / \
+                    g_val["version"]
+                # 1.3 Если нет локальной версии которая указана в конфигурации, или если есть локальная версия, но в ней нет файла.
+                if not path_name_gists_file_version.exists() or (path_name_gists_file_version.exists() and not os.listdir(path_name_gists_file_version)):
+                    makedirs(path_name_gists_file_version, exist_ok=True)
+                    # То тогда формируем команды для скачивания файлов Gists
+                    async_command_gists.append(
+                        f'''curl -s {g_val['raw_url']} > "{(path_name_gists_file_version/g_name).resolve()}"'''
+                    )
+        return async_command_gists
+    async_command_list.extend(sync_gists())
+
+    # logger.info(pprint.pformat(async_command_list))
+    # Выполняем команды асинхронно
+    res: list[type_os_res] = os_exe_async(command_list=async_command_list)
+    res.sort(key=lambda k: k.cod)
+    for _x in res:
+        _x.__str__(
+            logger_info=logger.info,
+            logger_error=logger.error, flag="CLONES"
+        )
 
 
 def cmd_(command: str, indir: str, ):
